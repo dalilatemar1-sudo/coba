@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETWORK LEARNING LAB - SMAS Al-Hilaal Tehoru</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#0b132b',
+                            900: '#070b19',
+                            950: '#03050d'
+                        },
+                        electric: {
+                            400: '#38bdf8',
+                            500: '#00f0ff',
+                            600: '#0284c7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Canvas Confetti & html2pdf -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #03050d;
+            color: #e2e8f0;
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Animated Grid Background */
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+        }
+
+        /* Glowing Neon Effects */
+        .neon-border {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.1);
+        }
+
+        .neon-glow-btn {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        .neon-glow-btn:hover {
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.7);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070b19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+
+        /* Animation Keyframes */
+        @keyframes dataPulse {
+            0% { stroke-dashoffset: 100; opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { stroke-dashoffset: 0; opacity: 0.2; }
+        }
+
+        .animate-data {
+            stroke-dasharray: 10 15;
+            animation: dataPulse 3s linear infinite;
+        }
+
+        /* Certificate Print CSS */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printableCertificate, #printableCertificate * {
+                visibility: visible;
+            }
+            #printableCertificate {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        .cert-border {
+            border: 12px double #00f0ff;
+            outline: 4px solid #eab308;
+            outline-offset: -8px;
+        }
+    </style>
+</head>
+<body class="cyber-grid min-h-screen flex flex-col justify-between selection:bg-electric-500 selection:text-black">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-navy-900/90 backdrop-blur-md border-b border-electric-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="p-2 bg-electric-500/10 rounded-lg border border-electric-500/40 text-electric-500">
+                        <i data-lucide="network" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-lg tracking-wider text-white">NET<span class="text-electric-500">LAB</span></span>
+                        <span class="hidden sm:inline-block text-xs block text-slate-400">SMAS Al-Hilaal Tehoru</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-1 text-sm font-medium">
+                    <button onclick="navigateTo('home')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-electric-500 hover:bg-electric-500/10 transition">Beranda</button>
+                    <button onclick="navigateTo('tujuan')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-electric-500 hover:bg-electric-500/10 transition">Tujuan</button>
+                    <button onclick="navigateTo('pemantik')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-electric-500 hover:bg-electric-500/10 transition">Pemantik</button>
+                    <button onclick="navigateTo('materi')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-electric-500 hover:bg-electric-500/10 transition">Materi Lab</button>
+                    <button onclick="navigateTo('kuis-login')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-electric-500 hover:bg-electric-500/10 transition">Kuis Evaluasi</button>
+                    <button onclick="navigateTo('rekap-guru')" class="nav-btn px-3 py-2 rounded-lg text-slate-300 hover:text-electric-500 hover:bg-electric-500/10 transition">Panel Guru</button>
+                </nav>
+
+                <!-- Student Active Profile Indicator -->
+                <div class="flex items-center space-x-3">
+                    <div id="userBadge" class="hidden flex items-center space-x-2 bg-navy-800 border border-electric-500/30 px-3 py-1.5 rounded-full text-xs">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span id="badgeStudentName" class="text-electric-400 font-medium"></span>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="md:hidden text-slate-300 hover:text-white p-2">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-navy-900/95 border-b border-electric-500/20 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="navigateTo('home')" class="block w-full text-left px-3 py-2 rounded-md text-base text-slate-300 hover:bg-electric-500/10">Beranda</button>
+            <button onclick="navigateTo('tujuan')" class="block w-full text-left px-3 py-2 rounded-md text-base text-slate-300 hover:bg-electric-500/10">Tujuan Pembelajaran</button>
+            <button onclick="navigateTo('pemantik')" class="block w-full text-left px-3 py-2 rounded-md text-base text-slate-300 hover:bg-electric-500/10">Pertanyaan Pemantik</button>
+            <button onclick="navigateTo('materi')" class="block w-full text-left px-3 py-2 rounded-md text-base text-slate-300 hover:bg-electric-500/10">Materi Pembelajaran</button>
+            <button onclick="navigateTo('kuis-login')" class="block w-full text-left px-3 py-2 rounded-md text-base text-slate-300 hover:bg-electric-500/10">Kuis Evaluasi</button>
+            <button onclick="navigateTo('rekap-guru')" class="block w-full text-left px-3 py-2 rounded-md text-base text-slate-300 hover:bg-electric-500/10">Panel Guru</button>
+        </div>
+    </header>
+
+    <!-- MAIN ROUTING CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= PAGE 1: BERANDA ================= -->
+        <section id="page-home" class="space-y-12 py-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <!-- Left Hero Text -->
+                <div class="space-y-6 text-left">
+                    <div class="inline-flex items-center space-x-2 bg-electric-500/10 border border-electric-500/30 px-3 py-1 rounded-full text-xs text-electric-400">
+                        <i data-lucide="cpu" class="w-4 h-4"></i>
+                        <span>Modul Pembelajaran Digital Informatika SMA</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                        NETWORK LEARNING LAB <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-electric-500 via-sky-300 to-indigo-400">
+                            JELAJAHI DUNIA JARINGAN
+                        </span>
+                    </h1>
+
+                    <p class="text-slate-300 text-base leading-relaxed">
+                        Memahami, Menganalisis, dan Memecahkan Permasalahan Jaringan Komputer secara Interaktif. Dirancang khusus untuk siswa SMAS Al-Hilaal Tehoru.
+                    </p>
+
+                    <!-- Teacher Meta -->
+                    <div class="flex items-center space-x-4 bg-navy-900/80 p-4 rounded-xl border border-white/10">
+                        <div class="w-12 h-12 rounded-full bg-electric-500/20 flex items-center justify-center text-electric-500 font-bold border border-electric-500/40">
+                            UT
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Guru Mata Pelajaran:</p>
+                            <p class="font-bold text-white">Ummi Dalila Temarwut, S.T.</p>
+                            <p class="text-xs text-electric-400">SMAS Al-Hilaal Tehoru</p>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="navigateTo('tujuan')" class="neon-glow-btn bg-electric-500 hover:bg-electric-600 text-navy-950 font-extrabold px-8 py-4 rounded-xl flex items-center space-x-2 text-base">
+                            <span>MULAI PEMBELAJARAN</span>
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                        <button onclick="navigateTo('materi')" class="bg-navy-800 hover:bg-navy-700 text-white font-medium px-6 py-4 rounded-xl border border-electric-500/30 flex items-center space-x-2">
+                            <i data-lucide="book-open" class="w-5 h-5 text-electric-500"></i>
+                            <span>Langsung ke Materi</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Hero Animation Network Canvas Simulation -->
+                <div class="relative bg-navy-900/60 p-6 rounded-2xl border border-electric-500/30 neon-border min-h-[360px] flex items-center justify-center">
+                    <svg class="w-full h-full absolute inset-0 z-0 pointer-events-none" viewBox="0 0 500 350">
+                        <!-- Cable Connections -->
+                        <line x1="250" y1="175" x2="100" y2="80" stroke="#00f0ff" stroke-width="2" class="animate-data"/>
+                        <line x1="250" y1="175" x2="400" y2="80" stroke="#00f0ff" stroke-width="2" class="animate-data"/>
+                        <line x1="250" y1="175" x2="100" y2="270" stroke="#00f0ff" stroke-width="2" class="animate-data"/>
+                        <line x1="250" y1="175" x2="400" y2="270" stroke="#00f0ff" stroke-width="2" class="animate-data"/>
+                        <!-- Server to Cloud -->
+                        <line x1="250" y1="175" x2="250" y2="50" stroke="#38bdf8" stroke-width="3" stroke-dasharray="5 5"/>
+                    </svg>
+
+                    <!-- Interactive Nodes Overlay -->
+                    <div class="relative z-10 w-full h-[320px] flex flex-col justify-between items-center py-2">
+                        <!-- Top Cloud / Server -->
+                        <div class="bg-navy-800 p-3 rounded-xl border border-sky-400/50 shadow-lg flex items-center space-x-2 animate-bounce">
+                            <i data-lucide="cloud" class="w-6 h-6 text-sky-400"></i>
+                            <span class="text-xs font-mono font-bold text-sky-200">INTERNET / BACKBONE</span>
+                        </div>
+
+                        <!-- Middle Router/Switch Center -->
+                        <div class="bg-electric-500/20 p-5 rounded-full border-2 border-electric-500 flex flex-col items-center shadow-xl shadow-electric-500/20">
+                            <i data-lucide="router" class="w-10 h-10 text-electric-500"></i>
+                            <span class="text-[10px] font-mono text-electric-400 mt-1 font-bold">CORE ROUTER</span>
+                        </div>
+
+                        <!-- Bottom Clients Grid -->
+                        <div class="w-full flex justify-between px-4">
+                            <div class="bg-navy-900/90 p-2.5 rounded-lg border border-slate-700 text-center">
+                                <i data-lucide="laptop" class="w-6 h-6 text-slate-300 mx-auto"></i>
+                                <span class="text-[10px] block text-slate-400 mt-1">Client A</span>
+                            </div>
+                            <div class="bg-navy-900/90 p-2.5 rounded-lg border border-slate-700 text-center">
+                                <i data-lucide="smartphone" class="w-6 h-6 text-slate-300 mx-auto"></i>
+                                <span class="text-[10px] block text-slate-400 mt-1">Mobile B</span>
+                            </div>
+                            <div class="bg-navy-900/90 p-2.5 rounded-lg border border-slate-700 text-center">
+                                <i data-lucide="server" class="w-6 h-6 text-emerald-400 mx-auto"></i>
+                                <span class="text-[10px] block text-emerald-400 mt-1">Web Server</span>
+                            </div>
+                            <div class="bg-navy-900/90 p-2.5 rounded-lg border border-slate-700 text-center">
+                                <i data-lucide="pc-case" class="w-6 h-6 text-slate-300 mx-auto"></i>
+                                <span class="text-[10px] block text-slate-400 mt-1">PC Lab C</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Highlights Quick Features -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+                <div class="bg-navy-900/50 p-6 rounded-xl border border-electric-500/20 space-y-3">
+                    <div class="w-10 h-10 rounded-lg bg-electric-500/10 flex items-center justify-center text-electric-500">
+                        <i data-lucide="layers" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-bold text-white">8 Sub-Materi Komprehensif</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Mulai dari konsep dasar, topologi, perangkat fisik, media kabel/nirkabel, IP Address, hingga keamanan jaringan.</p>
+                </div>
+                <div class="bg-navy-900/50 p-6 rounded-xl border border-electric-500/20 space-y-3">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                        <i data-lucide="shuffle" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-bold text-white">Evaluasi HOTS Acak</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">10 Soal analisis kasus nyata dengan pengacakan urutan soal dan pilihan jawaban berstandar algoritma Fisher-Yates.</p>
+                </div>
+                <div class="bg-navy-900/50 p-6 rounded-xl border border-electric-500/20 space-y-3">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
+                        <i data-lucide="award" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-bold text-white">Sertifikat Digital Otomatis</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Dapatkan sertifikat kompetensi bermuat nilai & predikat resmi yang dapat diunduh langsung dalam format PDF A4 Landscape.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: TUJUAN PEMBELAJARAN ================= -->
+        <section id="page-tujuan" class="hidden space-y-8 py-4">
+            <div class="border-b border-electric-500/20 pb-4 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white flex items-center space-x-2">
+                        <i data-lucide="target" class="w-7 h-7 text-electric-500"></i>
+                        <span>TUJUAN PEMBELAJARAN</span>
+                    </h2>
+                    <p class="text-xs text-slate-400">Capaian Pembelajaran Elemen Jaringan Komputer & Internet (Kurikulum Merdeka)</p>
+                </div>
+                <button onclick="navigateTo('pemantik')" class="bg-electric-500 hover:bg-electric-600 text-navy-950 px-4 py-2 rounded-lg font-bold text-xs flex items-center space-x-2">
+                    <span>Lanjut ke Pemantik</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div class="bg-navy-900/80 p-6 rounded-2xl border border-electric-500/30">
+                <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                    Setelah mengikuti seluruh tahapan pembelajaran interaktif pada modul <span class="text-electric-400 font-semibold">Network Learning Lab</span> ini, peserta didik kelas X/XI SMAS Al-Hilaal Tehoru diharapkan mampu:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="tujuanList">
+                    <!-- Dynamic insertion via JS or manual inline -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: PERTANYAAN PEMANTIK ================= -->
+        <section id="page-pemantik" class="hidden space-y-8 py-4">
+            <div class="border-b border-electric-500/20 pb-4">
+                <h2 class="text-2xl font-extrabold text-white flex items-center space-x-2">
+                    <i data-lucide="help-circle" class="w-7 h-7 text-electric-500"></i>
+                    <span>PERTANYAAN PEMANTIK</span>
+                </h2>
+                <p class="text-xs text-slate-400">Pikirkan dan uji intuisi awalmu sebelum mendalami materi teknik jaringan!</p>
+            </div>
+
+            <!-- Card Question 1 -->
+            <div class="bg-navy-900/90 p-6 rounded-2xl border border-electric-500/30 space-y-4">
+                <div class="flex items-center space-x-3">
+                    <span class="px-3 py-1 bg-electric-500/20 border border-electric-500 text-electric-400 font-mono text-xs rounded-full font-bold">Studi Kasus #1</span>
+                    <h3 class="text-lg font-bold text-white">Bagaimana Pesan Instant Bekerja dalam Hitungan Detik?</h3>
+                </div>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    "Ketika kalian mengirim pesan melalui WhatsApp kepada seseorang yang berada di luar negeri, bagaimana pesan tersebut bisa sampai ke smartphone orang tersebut hanya dalam hitungan detik? Apakah pesan itu berjalan melalui satu kabel secara langsung atau melewati banyak perangkat jaringan?"
+                </p>
+                
+                <div class="space-y-2 pt-2">
+                    <label class="block text-xs font-medium text-slate-400">Tuliskan gagasan / pendapat awalmu di bawah ini:</label>
+                    <textarea id="pemantikAns1" rows="3" class="w-full bg-navy-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-electric-500 focus:ring-1 focus:ring-electric-500 outline-none" placeholder="Menurut pendapat saya..."></textarea>
+                </div>
+
+                <button onclick="togglePemantikExplain(1)" class="bg-navy-800 hover:bg-navy-700 text-electric-400 border border-electric-500/30 px-4 py-2 rounded-lg text-xs font-bold flex items-center space-x-2">
+                    <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                    <span>PIKIRKAN JAWABAN & TAMPILKAN PENJELASAN</span>
+                </button>
+
+                <div id="pemantikExp1" class="hidden p-4 bg-electric-500/10 border border-electric-500/40 rounded-xl text-xs text-slate-200 leading-relaxed space-y-2">
+                    <span class="font-bold text-electric-400 block">Penjelasan Konseptual:</span>
+                    <p>Pesan kamu dipecah menjadi paket-paket data kecil (Paket IP). Paket ini membalat melalui gelombang radio Wi-Fi/Seluler menuju Tower (BTS), diteruskan melalui jaringan fiber optik bawah laut antar-benua, dikemudikan oleh ratusan <strong>Router</strong> global, lalu disatukan kembali di ponsel penerima secara instan!</p>
+                </div>
+            </div>
+
+            <!-- Card Question 2 -->
+            <div class="bg-navy-900/90 p-6 rounded-2xl border border-electric-500/30 space-y-4">
+                <div class="flex items-center space-x-3">
+                    <span class="px-3 py-1 bg-electric-500/20 border border-electric-500 text-electric-400 font-mono text-xs rounded-full font-bold">Studi Kasus #2</span>
+                    <h3 class="text-lg font-bold text-white">Menganalisis Troubleshooting Lab Komputer</h3>
+                </div>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    "Bayangkan seluruh komputer di laboratorium SMAS Al-Hilaal Tehoru terhubung ke satu jaringan, tetapi tiba-tiba hanya beberapa komputer yang tidak bisa mengakses internet. Menurut kalian, apakah masalahnya terletak pada komputer, kabel, switch, router, atau konfigurasi jaringan?"
+                </p>
+                
+                <div class="space-y-2 pt-2">
+                    <label class="block text-xs font-medium text-slate-400">Tuliskan hipotesis troubleshooting milikmu:</label>
+                    <textarea id="pemantikAns2" rows="3" class="w-full bg-navy-950 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-electric-500 focus:ring-1 focus:ring-electric-500 outline-none" placeholder="Menurut analisa awal saya..."></textarea>
+                </div>
+
+                <button onclick="togglePemantikExplain(2)" class="bg-navy-800 hover:bg-navy-700 text-electric-400 border border-electric-500/30 px-4 py-2 rounded-lg text-xs font-bold flex items-center space-x-2">
+                    <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                    <span>PIKIRKAN JAWABAN & TAMPILKAN PENJELASAN</span>
+                </button>
+
+                <div id="pemantikExp2" class="hidden p-4 bg-electric-500/10 border border-electric-500/40 rounded-xl text-xs text-slate-200 leading-relaxed space-y-2">
+                    <span class="font-bold text-electric-400 block">Penjelasan Konseptual:</span>
+                    <p>Karena hanya <em>beberapa</em> komputer yang bermasalah (bukan seluruhnya), kemungkinan besar Router utama dan Modem internet berfungsi normal! Masalah terlokalisasi pada kabel UTP komputer tersebut yang longgar/rusak, port pada Switch lokal yang mati, atau kesalahan konfigurasi IP Static/DHCP lokal pada perangkat tersebut.</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-4">
+                <button onclick="navigateTo('materi')" class="neon-glow-btn bg-electric-500 hover:bg-electric-600 text-navy-950 font-bold px-8 py-3 rounded-xl flex items-center space-x-2 text-sm">
+                    <span>LANJUT KE MATERI PEMBELAJARAN</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: MATERI LAB PEMBELAJARAN ================= -->
+        <section id="page-materi" class="hidden space-y-6 py-4">
+            <!-- Header & Progress -->
+            <div class="bg-navy-900/90 p-4 rounded-xl border border-electric-500/30 flex flex-col md:flex-row justify-between md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-extrabold text-white flex items-center space-x-2">
+                        <i data-lucide="book-open" class="w-6 h-6 text-electric-500"></i>
+                        <span>MODUL MATERI JARINGAN KOMPUTER</span>
+                    </h2>
+                    <p class="text-xs text-slate-400">Pelajari tiap submateri untuk membuka kunci evaluasi kuis.</p>
+                </div>
+
+                <!-- Learning Progress Bar -->
+                <div class="w-full md:w-64 space-y-1">
+                    <div class="flex justify-between text-xs font-mono">
+                        <span class="text-slate-400">Progres Pembelajaran</span>
+                        <span id="materiProgressPercent" class="text-electric-400 font-bold">0%</span>
+                    </div>
+                    <div class="w-full bg-navy-950 h-2.5 rounded-full overflow-hidden border border-electric-500/30">
+                        <div id="materiProgressBar" class="bg-gradient-to-r from-electric-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-Materi Navigation Tabs Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2" id="materiTabGrid">
+                <!-- Injected via JavaScript -->
+            </div>
+
+            <!-- Active Sub-Materi Content Display Area -->
+            <div id="materiContentCard" class="bg-navy-900/90 p-6 rounded-2xl border border-electric-500/30 min-h-[450px] space-y-6">
+                <!-- Dynamic Content Hydrated Here -->
+            </div>
+
+            <!-- Bottom Submateri Navigation Controls -->
+            <div class="flex justify-between items-center pt-2">
+                <button id="btnPrevMateri" onclick="changeMateriStep(-1)" class="bg-navy-800 hover:bg-navy-700 text-slate-300 px-4 py-2.5 rounded-xl border border-white/10 font-bold text-xs flex items-center space-x-2 disabled:opacity-40">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    <span>Submateri Sebelumnya</span>
+                </button>
+
+                <button id="btnNextMateri" onclick="changeMateriStep(1)" class="bg-electric-500 hover:bg-electric-600 text-navy-950 px-6 py-2.5 rounded-xl font-bold text-xs flex items-center space-x-2">
+                    <span>Submateri Selanjutnya</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 5: KUIS LOGIN SISWA ================= -->
+        <section id="page-kuis-login" class="hidden space-y-6 py-8 max-w-lg mx-auto">
+            <div class="bg-navy-900/90 p-8 rounded-2xl border border-electric-500/40 neon-border text-center space-y-6">
+                <div class="w-16 h-16 bg-electric-500/10 rounded-full flex items-center justify-center text-electric-500 mx-auto border border-electric-500/40">
+                    <i data-lucide="user-check" class="w-8 h-8"></i>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white">IDENTITAS PESERTA KUIS</h2>
+                    <p class="text-xs text-slate-400 mt-1">Masukkan data diri resmi sebelum memulai ujian evaluasi HOTS.</p>
+                </div>
+
+                <form id="studentLoginForm" onsubmit="handleStudentLogin(event)" class="space-y-4 text-left">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Lengkap Siswa</label>
+                        <input type="text" id="loginName" required placeholder="Contoh: Ahmad Abdullah" class="w-full bg-navy-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-electric-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Kelas / Rombel</label>
+                        <select id="loginClass" required class="w-full bg-navy-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-electric-500 outline-none">
+                            <option value="">-- Pilih Kelas --</option>
+                            <option value="X-1">X-1 (Fase E)</option>
+                            <option value="X-2">X-2 (Fase E)</option>
+                            <option value="XI-IPA">XI IPA</option>
+                            <option value="XI-IPS">XI IPS</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Nomor Induk / Kode Peserta</label>
+                        <input type="text" id="loginCode" required placeholder="Contoh: NIS/2026/045" class="w-full bg-navy-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-electric-500 outline-none">
+                    </div>
+
+                    <div class="p-3 bg-navy-950 rounded-lg border border-slate-800 text-[11px] text-slate-400 space-y-1">
+                        <div class="flex items-center space-x-1 text-amber-400 font-semibold">
+                            <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+                            <span>Catatan Fitur Pengacakan (Random Quiz):</span>
+                        </div>
+                        <p>Setiap sesi ujian akan mengacak 10 urutan soal & posisi opsi (A, B, C, D) menggunakan Algoritma Fisher-Yates.</p>
+                    </div>
+
+                    <button type="submit" class="w-full neon-glow-btn bg-electric-500 hover:bg-electric-600 text-navy-950 font-extrabold py-3.5 rounded-xl text-sm flex items-center justify-center space-x-2">
+                        <span>MULAI KUIS EVALUASI</span>
+                        <i data-lucide="play" class="w-4 h-4"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 6: TAMPILAN PENGERJAAN KUIS ================= -->
+        <section id="page-kuis-exam" class="hidden space-y-6 py-4">
+            <!-- Header Bar -->
+            <div class="bg-navy-900/90 p-4 rounded-xl border border-electric-500/30 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-lg bg-electric-500/10 border border-electric-500/40 flex items-center justify-center text-electric-500 font-bold">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span id="examStudentMeta" class="text-xs font-bold text-electric-400 block"></span>
+                        <span class="text-sm font-extrabold text-white">Evaluasi Akhir - Jaringan Komputer</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <span class="text-[10px] text-slate-400 block">Progress</span>
+                        <span id="examProgressText" class="text-xs font-mono font-bold text-emerald-400">Soal 1 dari 10</span>
+                    </div>
+                    <button onclick="toggleFlagCurrentQuestion()" id="btnFlagQuestion" class="bg-navy-800 border border-amber-500/40 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1 hover:bg-navy-700">
+                        <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
+                        <span>Ragu-ragu</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question Numbers Nav Grid -->
+            <div class="bg-navy-900/60 p-3 rounded-xl border border-white/10 flex flex-wrap gap-2 justify-center" id="quizNumberNav">
+                <!-- Numbers 1 to 10 dynamically injected -->
+            </div>
+
+            <!-- Main Question & Options Card -->
+            <div class="bg-navy-900/90 p-6 rounded-2xl border border-electric-500/30 space-y-6">
+                <!-- Metadata Indicators -->
+                <div class="flex justify-between items-center text-xs">
+                    <span id="questionCognitiveBadge" class="px-2.5 py-1 bg-indigo-500/20 border border-indigo-400 text-indigo-300 rounded-full font-mono"></span>
+                    <span id="questionIndicatorText" class="text-slate-400 italic"></span>
+                </div>
+
+                <!-- Case Study Prompt -->
+                <div id="questionText" class="text-base text-white font-medium leading-relaxed bg-navy-950/60 p-4 rounded-xl border border-slate-800">
+                    <!-- Text inserted -->
+                </div>
+
+                <!-- Answer Options List -->
+                <div id="optionsContainer" class="space-y-3">
+                    <!-- Dynamic Options -->
+                </div>
+            </div>
+
+            <!-- Exam Navigation Buttons -->
+            <div class="flex justify-between items-center pt-2">
+                <button id="btnPrevQuestion" onclick="navigateQuizQuestion(-1)" class="bg-navy-800 hover:bg-navy-700 text-slate-300 px-5 py-2.5 rounded-xl border border-white/10 text-xs font-bold flex items-center space-x-2">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Soal Sebelumnya</span>
+                </button>
+
+                <button id="btnNextQuestion" onclick="navigateQuizQuestion(1)" class="bg-electric-500 hover:bg-electric-600 text-navy-950 px-6 py-2.5 rounded-xl font-bold text-xs flex items-center space-x-2">
+                    <span>Soal Selanjutnya</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+
+                <button id="btnFinishExam" onclick="confirmFinishExam()" class="hidden bg-emerald-500 hover:bg-emerald-600 text-navy-950 px-6 py-2.5 rounded-xl font-extrabold text-xs items-center space-x-2 shadow-lg shadow-emerald-500/20">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <span>SELESAI DAN KIRIM JAWABAN</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 7: HASIL EVALUASI & PEMBAHASAN ================= -->
+        <section id="page-kuis-result" class="hidden space-y-8 py-4">
+            <!-- Score Card -->
+            <div class="bg-navy-900/90 p-8 rounded-2xl border border-electric-500/40 text-center space-y-6 neon-border max-w-2xl mx-auto">
+                <div class="inline-flex items-center space-x-2 bg-electric-500/10 border border-electric-500/30 px-4 py-1.5 rounded-full text-xs text-electric-400 font-mono">
+                    <i data-lucide="award" class="w-4 h-4"></i>
+                    <span>HASIL EVALUASI PEMBELAJARAN</span>
+                </div>
+
+                <div>
+                    <h3 id="resultStudentName" class="text-2xl font-extrabold text-white"></h3>
+                    <p id="resultStudentMeta" class="text-xs text-slate-400 mt-1"></p>
+                </div>
+
+                <!-- Final Score Display Circle -->
+                <div class="w-36 h-36 rounded-full bg-navy-950 border-4 border-electric-500 mx-auto flex flex-col items-center justify-center shadow-xl shadow-electric-500/20">
+                    <span class="text-xs text-slate-400 font-mono">NILAI AKHIR</span>
+                    <span id="resultFinalScore" class="text-5xl font-black text-electric-400">0</span>
+                    <span class="text-[10px] text-slate-500">Skala 100</span>
+                </div>
+
+                <!-- Predikat & Stats Grid -->
+                <div class="grid grid-cols-3 gap-3 max-w-md mx-auto text-center">
+                    <div class="bg-navy-950 p-3 rounded-xl border border-slate-800">
+                        <span class="text-[10px] text-slate-400 block">Benar</span>
+                        <span id="resultCorrectCount" class="text-lg font-bold text-emerald-400">0</span>
+                    </div>
+                    <div class="bg-navy-950 p-3 rounded-xl border border-slate-800">
+                        <span class="text-[10px] text-slate-400 block">Salah</span>
+                        <span id="resultWrongCount" class="text-lg font-bold text-rose-400">0</span>
+                    </div>
+                    <div class="bg-navy-950 p-3 rounded-xl border border-slate-800">
+                        <span class="text-[10px] text-slate-400 block">Predikat</span>
+                        <span id="resultPredicate" class="text-xs font-bold text-amber-400 block mt-1"></span>
+                    </div>
+                </div>
+
+                <!-- Buttons for Certificate & Retake -->
+                <div class="flex flex-wrap justify-center gap-4 pt-2">
+                    <button onclick="navigateTo('sertifikat')" class="neon-glow-btn bg-electric-500 hover:bg-electric-600 text-navy-950 font-extrabold px-6 py-3 rounded-xl text-xs flex items-center space-x-2">
+                        <i data-lucide="file-check" class="w-4 h-4"></i>
+                        <span>LIHAT SERTIFIKAT HASIL</span>
+                    </button>
+                    <button onclick="navigateTo('kuis-login')" class="bg-navy-800 hover:bg-navy-700 text-slate-300 font-bold px-5 py-3 rounded-xl border border-white/10 text-xs flex items-center space-x-2">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>Ulangi Kuis (Acak Baru)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Answer Explanations Section -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                    <i data-lucide="list-checks" class="w-5 h-5 text-electric-500"></i>
+                    <span>PEMBAHASAN SOAL LENGKAP</span>
+                </h3>
+
+                <div id="explanationsContainer" class="space-y-4">
+                    <!-- Dynamic Question Discussions -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 8: SERTIFIKAT HASIL ================= -->
+        <section id="page-sertifikat" class="hidden space-y-6 py-4">
+            <div class="flex flex-wrap justify-between items-center gap-4 border-b border-electric-500/20 pb-4 no-print">
+                <div>
+                    <h2 class="text-xl font-extrabold text-white flex items-center space-x-2">
+                        <i data-lucide="award" class="w-6 h-6 text-electric-500"></i>
+                        <span>SERTIFIKAT HASIL PEMBELAJARAN</span>
+                    </h2>
+                    <p class="text-xs text-slate-400">Dokumen digital bukti penyelesaian evaluasi materi Jaringan Komputer.</p>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button onclick="window.print()" class="bg-navy-800 hover:bg-navy-700 text-electric-400 border border-electric-500/30 px-4 py-2 rounded-xl text-xs font-bold flex items-center space-x-2">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        <span>Cetak Sertifikat</span>
+                    </button>
+                    <button onclick="downloadCertificatePDF()" class="neon-glow-btn bg-electric-500 hover:bg-electric-600 text-navy-950 px-5 py-2 rounded-xl text-xs font-extrabold flex items-center space-x-2">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Unduh PDF (A4 Landscape)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Printable Certificate Document Frame (A4 Landscape aspect ratio) -->
+            <div class="overflow-x-auto pb-4">
+                <div id="printableCertificate" class="w-[980px] h-[690px] mx-auto bg-navy-950 text-slate-100 p-8 rounded-none cert-border relative flex flex-col justify-between shadow-2xl overflow-hidden">
+                    <!-- Background Watermark SVG -->
+                    <svg class="absolute inset-0 w-full h-full opacity-5 pointer-events-none" viewBox="0 0 400 300">
+                        <circle cx="200" cy="150" r="100" fill="none" stroke="#00f0ff" stroke-width="2"/>
+                        <path d="M100 150 L300 150 M200 50 L200 250" stroke="#00f0ff" stroke-width="1.5"/>
+                    </svg>
+
+                    <!-- Top Header -->
+                    <div class="text-center space-y-2 border-b border-electric-500/30 pb-4">
+                        <div class="flex items-center justify-center space-x-3">
+                            <i data-lucide="shield-check" class="w-10 h-10 text-electric-500"></i>
+                            <div>
+                                <h1 class="text-2xl font-black tracking-widest text-white uppercase">SMAS AL-HILAAL TEHORU</h1>
+                                <p class="text-[11px] text-electric-400 font-mono">LABORATORIUM DIGITAL INFORMATIKA & JARINGAN KOMPUTER</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Title -->
+                    <div class="text-center space-y-1">
+                        <h2 class="text-3xl font-serif font-bold text-amber-400 tracking-wider">SERTIFIKAT HASIL PEMBELAJARAN</h2>
+                        <p class="text-xs text-slate-400 font-mono" id="certNumber">No. Cert: NETLAB/2026/000</p>
+                    </div>
+
+                    <!-- Recipient Body -->
+                    <div class="text-center space-y-3 px-12">
+                        <p class="text-xs text-slate-300 italic">Diberikan kepada siswa berprestasi:</p>
+                        <h3 id="certStudentName" class="text-3xl font-extrabold text-electric-500 border-b-2 border-electric-500/40 inline-block px-8 py-1">NAME HERE</h3>
+                        <p id="certStudentClass" class="text-xs font-mono text-slate-300">Kelas: - | NIS/Kode: -</p>
+                        <p class="text-xs text-slate-300 leading-relaxed max-w-2xl mx-auto pt-2">
+                            Telah menyelesaikan Evaluasi Pembelajaran Digital pada Modul <span class="text-white font-bold">"JARINGAN KOMPUTER"</span> berbasis HOTS (Higher Order Thinking Skills) dengan capaian hasil sebagai berikut:
+                        </p>
+                    </div>
+
+                    <!-- Score Table Meta -->
+                    <div class="grid grid-cols-4 gap-4 max-w-2xl mx-auto bg-navy-900/90 border border-electric-500/30 p-3 rounded-xl text-center">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Jawaban Benar</span>
+                            <span id="certCorrect" class="text-base font-bold text-emerald-400">0 / 10</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Jawaban Salah</span>
+                            <span id="certWrong" class="text-base font-bold text-rose-400">0 / 10</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Nilai Akhir</span>
+                            <span id="certScore" class="text-xl font-black text-electric-400">0</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Predikat Capaian</span>
+                            <span id="certPredicate" class="text-xs font-bold text-amber-400 block mt-1">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Signatures Footer -->
+                    <div class="flex justify-between items-end px-10 pt-4">
+                        <div class="text-center text-xs space-y-1">
+                            <p class="text-[10px] text-slate-400">Tehoru, <span id="certDate">10 November 2026</span></p>
+                            <p class="font-bold text-slate-200">Mengetahui, Peserta Didik</p>
+                            <div class="h-12 flex items-center justify-center font-serif text-slate-500 italic text-xs">
+                                [ Tanda Tangan ]
+                            </div>
+                            <p id="certStudentSignName" class="font-bold text-electric-400 text-xs"></p>
+                        </div>
+
+                        <div class="text-center text-xs space-y-1">
+                            <p class="text-[10px] text-slate-400">Guru Mata Pelajaran Informatika</p>
+                            <div class="h-12 flex items-center justify-center text-electric-500 font-mono text-xs font-bold border-b border-electric-500/30 px-4">
+                                Ummi Dalila Temarwut, S.T.
+                            </div>
+                            <p class="font-bold text-white text-xs">Ummi Dalila Temarwut, S.T.</p>
+                            <p class="text-[9px] text-slate-400">NIP. SMAS Al-Hilaal Tehoru</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 9: DASHBOARD PANEL GURU (REKAP KELAS) ================= -->
+        <section id="page-rekap-guru" class="hidden space-y-6 py-4">
+            <div class="border-b border-electric-500/20 pb-4 flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-extrabold text-white flex items-center space-x-2">
+                        <i data-lucide="database" class="w-6 h-6 text-electric-500"></i>
+                        <span>PANEL REKAPITULASI GURU</span>
+                    </h2>
+                    <p class="text-xs text-slate-400">Monitoring hasil evaluasi siswa yang tersimpan pada LocalStorage sesi ini.</p>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button onclick="exportTeacherRekapCSV()" class="bg-emerald-500 hover:bg-emerald-600 text-navy-950 px-4 py-2 rounded-xl font-bold text-xs flex items-center space-x-2">
+                        <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                        <span>Ekspor Excel / CSV</span>
+                    </button>
+                    <button onclick="clearTeacherRekapData()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 px-3 py-2 rounded-xl text-xs font-semibold">
+                        Reset Rekap
+                    </button>
+                </div>
+            </div>
+
+            <!-- Rekap Table -->
+            <div class="bg-navy-900/90 rounded-2xl border border-electric-500/30 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-navy-950 text-electric-400 font-mono uppercase text-[10px] border-b border-electric-500/30">
+                            <tr>
+                                <th class="p-3">#</th>
+                                <th class="p-3">Tanggal / Waktu</th>
+                                <th class="p-3">Nama Siswa</th>
+                                <th class="p-3">Kelas</th>
+                                <th class="p-3">Kode/NIS</th>
+                                <th class="p-3">Benar</th>
+                                <th class="p-3">Salah</th>
+                                <th class="p-3">Nilai Akhir</th>
+                                <th class="p-3">Predikat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rekapTableBody" class="divide-y divide-slate-800">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-navy-950 border-t border-electric-500/20 py-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>&copy; 2026 Network Learning Lab — SMAS Al-Hilaal Tehoru.</p>
+            <p class="text-electric-500 font-mono">Disusun oleh: Ummi Dalila Temarwut, S.T.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        /* ==========================================================================
+           1. DATA STRUCTURES & STATE MANAGEMENT
+           ========================================================================== */
+
+        // Learning Objectives Data
+        const TUJUAN_DATA = [
+            "1. Menjelaskan konsep, fungsi, manfaat, dan karakteristik utama jaringan komputer.",
+            "2. Menganalisis jenis jaringan komputer berdasarkan jangkauan wilayah (PAN, LAN, MAN, WAN).",
+            "3. Mengidentifikasi serta membedakan topologi fisik dan logis jaringan komputer.",
+            "4. Menganalisis fungsi spesifik perangkat keras jaringan (Router, Switch, Hub, Modem, AP, NIC, Server).",
+            "5. Memahami karakteristik media transmisi kabel (UTP T568A/B, STP, FO) dan nirkabel.",
+            "6. Mengidentifikasi pemetaan alamat IP Address (v4/v6, Publik/Privat) dan MAC Address.",
+            "7. Memahami protokol komunikasi utama (HTTP, HTTPS, FTP, SMTP, DNS, TCP, UDP).",
+            "8. Menganalisis fungsi Firewall, Enkripsi, dan Autentikasi dalam keamanan jaringan.",
+            "9. Menganalisis permasalahan koneksi jaringan (Troubleshooting) dan menentukan solusinya.",
+            "10. Menunjukkan sikap kritis, logis, dan bertanggung jawab dalam pemanfaatan jaringan."
+        ];
+
+        // 8 Sub-Materi Content Data
+        const MATERI_DATA = [
+            {
+                id: 'materi-a',
+                title: 'A. Konsep Dasar Jaringan',
+                icon: 'network',
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-3">MATERI A: Konsep Dasar Jaringan Komputer</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        Jaringan Komputer adalah sekumpulan komputer dan perangkat peripheral terhubung yang saling berkomunikasi dan berbagi sumber daya (data, printer, internet) melalui media transmisi tertentu.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-electric-400 text-xs uppercase mb-2">Fungsi & Manfaat Utama</h4>
+                            <ul class="text-xs text-slate-300 space-y-1.5 list-disc pl-4">
+                                <li><strong>Resource Sharing:</strong> Berbagi dokumen, printer, dan storage bersama.</li>
+                                <li><strong>Komunikasi Cepat:</strong> Email, chat, dan video conference instan.</li>
+                                <li><strong>Keamanan Data Terpusat:</strong> Backup data terorganisir di server.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-amber-400 text-xs uppercase mb-2">Kelebihan vs Kekurangan</h4>
+                            <p class="text-xs text-slate-300 mb-1"><strong>(+) Efisiensi tinggi:</strong> Menghemat biaya perangkat keras.</p>
+                            <p class="text-xs text-slate-300"><strong>(-) Kerentanan:</strong> Ancaman malware & ketergantungan pada server utama.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 'materi-b',
+                title: 'B. Jenis-Jenis Jaringan',
+                icon: 'globe',
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-3">MATERI B: Klasifikasi Jaringan Berdasarkan Jangkauan</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-navy-950 p-4 rounded-xl border border-electric-500/30">
+                            <span class="text-xs font-bold text-electric-400">PAN</span>
+                            <h4 class="font-bold text-white text-sm mb-1">Personal Area Network</h4>
+                            <p class="text-[11px] text-slate-400">Jangkauan: &lt; 10 Meter. Contoh: Bluetooth HP ke Smartwatch.</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-emerald-500/30">
+                            <span class="text-xs font-bold text-emerald-400">LAN</span>
+                            <h4 class="font-bold text-white text-sm mb-1">Local Area Network</h4>
+                            <p class="text-[11px] text-slate-400">Jangkauan: Gedung / Sekolah Tehoru. Kecepatan transfer sangat tinggi.</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-amber-500/30">
+                            <span class="text-xs font-bold text-amber-400">MAN</span>
+                            <h4 class="font-bold text-white text-sm mb-1">Metropolitan Area</h4>
+                            <p class="text-[11px] text-slate-400">Jangkauan: Satu Kota / Kabupaten (10–50 KM). Menghubungkan antar-kantor.</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-indigo-500/30">
+                            <span class="text-xs font-bold text-indigo-400">WAN</span>
+                            <h4 class="font-bold text-white text-sm mb-1">Wide Area Network</h4>
+                            <p class="text-[11px] text-slate-400">Jangkauan: Antar-Negara / Global. Menggunakan satelit & kabel laut.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 'materi-c',
+                title: 'C. Topologi Jaringan',
+                icon: 'git-graph',
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-3">MATERI C: Topologi Fisik Jaringan</h3>
+                    <p class="text-xs text-slate-300 mb-4">Topologi adalah skema atau cara menghubungkan komputer satu dengan lainnya.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <h4 class="font-bold text-electric-400 text-sm">1. Topologi Star (Bintang)</h4>
+                            <p class="text-[11px] text-slate-300">Setiap node terhubung langsung ke Switch/Hub pusat. Jika 1 kabel putus, node lain tidak terganggu.</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <h4 class="font-bold text-electric-400 text-sm">2. Topologi Bus</h4>
+                            <p class="text-[11px] text-slate-300">Menggunakan 1 kabel tunggal utama (backbone). Hemat kabel tetapi rawan tabrakan data (collision).</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <h4 class="font-bold text-electric-400 text-sm">3. Topologi Mesh (Jala)</h4>
+                            <p class="text-[11px] text-slate-300">Setiap perangkat terhubung ke setiap perangkat lain. Toleransi kesalahan paling tinggi namun biaya paling mahal.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 'materi-d',
+                title: 'D. Perangkat Jaringan',
+                icon: 'hard-drive',
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-3">MATERI D: Perangkat Keras Jaringan (Hardware)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-electric-400 text-sm mb-1">Router</h4>
+                            <p class="text-slate-300">Menghubungkan <span class="text-amber-400">dua jaringan berbeda</span> (misal: LAN Sekolah ke Internet WAN). Bekerja di Layer 3 OSI.</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-emerald-400 text-sm mb-1">Switch vs Hub</h4>
+                            <p class="text-slate-300"><strong>Switch:</strong> Cerdas, mengirim data spesifik ke MAC Address tujuan.<br><strong>Hub:</strong> Menyiarkan (broadcast) data ke semua port.</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-sky-400 text-sm mb-1">Access Point & Modem</h4>
+                            <p class="text-slate-300"><strong>Access Point:</strong> Memancarkan sinyal Wi-Fi.<br><strong>Modem:</strong> Mengubah sinyal analog ke digital & sebaliknya.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 'materi-e',
+                title: 'E. Media Transmisi',
+                icon: 'cable',
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-3">MATERI E: Media Transmisi & Kabel UTP</h3>
+                    <div class="bg-navy-950 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
+                        <h4 class="font-bold text-amber-400">Urutan Standar Warna Kabel UTP (T568B - Standar Straight)</h4>
+                        <div class="grid grid-cols-4 sm:grid-cols-8 gap-2 text-center font-mono text-[10px] text-black font-bold">
+                            <div class="bg-orange-200 p-2 rounded">1. Putih Oranye</div>
+                            <div class="bg-orange-500 text-white p-2 rounded">2. Oranye</div>
+                            <div class="bg-emerald-200 p-2 rounded">3. Putih Hijau</div>
+                            <div class="bg-blue-600 text-white p-2 rounded">4. Biru</div>
+                            <div class="bg-blue-200 p-2 rounded">5. Putih Biru</div>
+                            <div class="bg-emerald-600 text-white p-2 rounded">6. Hijau</div>
+                            <div class="bg-amber-200 p-2 rounded">7. Putih Cokelat</div>
+                            <div class="bg-amber-800 text-white p-2 rounded">8. Cokelat</div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 'materi-f',
+                title: 'F. IP & MAC Address',
+                icon: 'binary',
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-3">MATERI F: Pengalamatan Komputer (IP vs MAC Address)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-navy-950 p-4 rounded-xl border border-electric-500/30 space-y-2">
+                            <h4 class="font-bold text-electric-400">IP Address (Alamat Logis)</h4>
+                            <p class="text-slate-300">Dapat berubah tergantung jaringan tempat perangkat terhubung.</p>
+                            <p class="font-mono bg-navy-900 p-2 rounded text-emerald-400">IPv4: 192.168.1.10</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-electric-500/30 space-y-2">
+                            <h4 class="font-bold text-electric-400">MAC Address (Alamat Fisik)</h4>
+                            <p class="text-slate-300">Alamat permanen unik yang tertanam pada NIC oleh pabrik pembuatan.</p>
+                            <p class="font-mono bg-navy-900 p-2 rounded text-emerald-400">MAC: 00:1A:2B:3C:4D:5E</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 'materi-g',
+                title: 'G. Protokol Jaringan',
+                icon: 'arrow-left-right',
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-3">MATERI G: Protokol Komunikasi Jaringan</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-navy-950 text-electric-400 font-mono">
+                                <tr>
+                                    <th class="p-2">Protokol</th>
+                                    <th class="p-2">Fungsi Utama</th>
+                                    <th class="p-2">Perbedaan Kunci</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr><td class="p-2 font-bold text-white">HTTP vs HTTPS</td><td class="p-2">Transfer Halaman Web</td><td class="p-2 text-emerald-400">HTTPS memiliki Enkripsi SSL/TLS (Aman)</td></tr>
+                                <tr><td class="p-2 font-bold text-white">DNS</td><td class="p-2">Menerjemahkan Domain ke IP</td><td class="p-2">Ubah "google.com" jadi "142.250.190.46"</td></tr>
+                                <tr><td class="p-2 font-bold text-white">TCP vs UDP</td><td class="p-2">Transport Data</td><td class="p-2">TCP: Reliabel (Ada Handshake) | UDP: Cepat (Streaming)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `
+            },
+            {
+                id: 'materi-h',
+                title: 'H. Keamanan Jaringan',
+                icon: 'shield-lock',
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-3">MATERI H: Keamanan & Protecting Networks</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-rose-400 mb-1">Firewall</h4>
+                            <p class="text-slate-300">Sistem penyaring lalu lintas data yang memblokir akses tak dikenal ke jaringan lokal.</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-emerald-400 mb-1">Enkripsi</h4>
+                            <p class="text-slate-300">Proses mengacak teks biasa menjadi ciphertext agar tidak terbaca saat disadap.</p>
+                        </div>
+                        <div class="bg-navy-950 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-amber-400 mb-1">Autentikasi</h4>
+                            <p class="text-slate-300">Memverifikasi identitas pengguna (Username, Password, 2FA/MFA).</p>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        // 10 HOTS Question Bank (With Unique Option IDs for Shuffle Safety)
+        const MASTER_QUESTIONS = [
+            {
+                id: 'q1',
+                category: 'Topologi & Jenis',
+                cognitive: 'C4 - Analisis',
+                prompt: 'SMAS Al-Hilaal Tehoru hendak membangun lab komputer baru berisi 30 unit PC. Pihak sekolah menginginkan jika salah satu kabel PC rusak, PC yang lain tetap terhubung lancar tanpa memutus jaringan keseluruhan, dan lalu lintas data tidak disiarkan secara serampangan. Topologi dan perangkat apakah yang paling efektif?',
+                options: [
+                    { id: 'opt_a', text: 'Topologi Bus dengan perangkat Hub' },
+                    { id: 'opt_b', text: 'Topologi Star dengan perangkat Switch', correct: true },
+                    { id: 'opt_c', text: 'Topologi Ring dengan perangkat Repeater' },
+                    { id: 'opt_d', text: 'Topologi Mesh dengan perangkat Modem' }
+                ],
+                explanation: 'Topologi Star menyediakan isolasi kerusakan per-kabel. Menggunakan Switch memastikan transfer data secara cerdas unicast (bukan broadcast serampangan seperti Hub).'
+            },
+            {
+                id: 'q2',
+                category: 'Troubleshooting Kabel UTP',
+                cognitive: 'C5 - Evaluasi',
+                prompt: 'Seorang teknisi memasang kabel UTP dengan urutan susunan warna T568B di ujung A, namun di ujung B memasang urutan acak yang tidak sesuai standar T568A maupun T568B. Saat diuji dengan LAN Tester, beberapa lampu indikator tidak menyala berurutan. Apa konsekuensi teknis utama dari kesalahan ini?',
+                options: [
+                    { id: 'opt_a', text: 'Data mengalami Crosstalk parah dan gagal transmisi karena pasangan lilitan kabel tidak teratur', correct: true },
+                    { id: 'opt_b', text: 'Tegangan listrik kabel akan melonjak dan membakar port komputer' },
+                    { id: 'opt_c', text: 'Alamat IP Address komputer akan otomatis terhapus' },
+                    { id: 'opt_d', text: 'Komputer hanya bisa mengirim file tetapi tidak bisa menerima file' }
+                ],
+                explanation: 'Lilitan kabel UTP dirancang khusus untuk meredam interferensi sinyal elektromagnetik (Crosstalk). Pembatalan urutan standar merusak fungsi peredam tersebut.'
+            },
+            {
+                id: 'q3',
+                category: 'IP & MAC Address',
+                cognitive: 'C4 - Analisis',
+                prompt: 'Dua buah komputer di Lab Komputer dikonfigurasi secara manual. Komputer A diberi IP 192.168.1.15/24 dan Komputer B diberi IP 192.168.1.15/24. Saat Komputer B dinyalakan, muncul pesan kesalahan "IP Address Conflict" dan keduanya tidak dapat saling berkirim data. Mengapa hal ini terjadi?',
+                options: [
+                    { id: 'opt_a', text: 'MAC Address kedua komputer tersebut sama dari pabrik' },
+                    { id: 'opt_b', text: 'Dua perangkat dalam satu segmen jaringan lokal tidak boleh memiliki IP Address logis yang identik', correct: true },
+                    { id: 'opt_c', text: 'Kabel UTP yang digunakan harus bertipe Fiber Optic' },
+                    { id: 'opt_d', text: 'Komputer A belum menginstal perangkat lunak Antivirus' }
+                ],
+                explanation: 'IP Address adalah identitas unik perangkat pada layer jaringan. Konflik terjadi jika dua host menggunakan alamat IP yang persis sama.'
+            },
+            {
+                id: 'q4',
+                category: 'Protokol Keamanan',
+                cognitive: 'C5 - Evaluasi',
+                prompt: 'Saat seorang siswa melakukan login pada situs web dengan URL "http://bank-sekolah.sch.id" di Wi-Fi publik, seorang hacker menangkap paket data tersebut menggunakan Wireshark dan langsung dapat membaca password siswa dalam bentuk teks biasa. Mengapa protokol HTTP sangat rentan terhadap serangan Man-in-the-Middle ini?',
+                options: [
+                    { id: 'opt_a', text: 'HTTP tidak melakukan enkripsi pada lapisan data transaksi (Plain Text)', correct: true },
+                    { id: 'opt_b', text: 'HTTP menggunakan jaringan nirkabel secara berlebihan' },
+                    { id: 'opt_c', text: 'HTTP mengubah alamat MAC Address pengguna secara otomatis' },
+                    { id: 'opt_d', text: 'HTTP hanya dapat dijalankan di Sistem Operasi Linux' }
+                ],
+                explanation: 'Protokol HTTP mengirimkan data tanpa enkripsi. HTTPS menggunakan SSL/TLS untuk mengacak data (ciphertext) sehingga aman dari pengintaian.'
+            },
+            {
+                id: 'q5',
+                category: 'Routing & Perangkat',
+                cognitive: 'C6 - Merancang Solusi',
+                prompt: 'Gedung A SMAS Al-Hilaal Tehoru menggunakan subnet IP 192.168.10.0/24, sedangkan Gedung B menggunakan subnet IP 10.0.0.0/8. Kedua gedung sudah terhubungkan kabel fiber optik, namun PC di Gedung A tetap tidak bisa ping ke PC di Gedung B. Perangkat dan konfigurasi apakah yang dibutuhkan untuk menghubungkan kedua jaringan ini?',
+                options: [
+                    { id: 'opt_a', text: 'Memasang Hub tambahan di tengah-tengah kabel' },
+                    { id: 'opt_b', text: 'Memasang Router dan mengonfigurasi Tabel Routing inter-subnet', correct: true },
+                    { id: 'opt_c', text: 'Mengganti semua konektor RJ45 dengan port USB' },
+                    { id: 'opt_d', text: 'Mengubah semua IP Address menjadi IPv6 secara paksa' }
+                ],
+                explanation: 'Switch atau Hub biasa hanya bekerja pada segmen/subnet yang sama. Untuk rute lalu lintas antar dua subnet IP yang berbeda diperlukan Router.'
+            },
+            {
+                id: 'q6',
+                category: 'Transport Layer Protocols',
+                cognitive: 'C4 - Analisis',
+                prompt: 'Aplikasi Video Conference Live Streaming membutuhkan pengiriman data audio-video real-time yang cepat dan lancar meskipun ada sedikit paket data yang hilang. Sebaliknya, pengiriman file dokumen PDF membutuhkan keutuhan data 100% tanpa ada corrupt. Kombinasi protokol transport manakah yang paling tepat untuk kedua aplikasi tersebut?',
+                options: [
+                    { id: 'opt_a', text: 'Streaming menggunakan UDP; Pengiriman PDF menggunakan TCP', correct: true },
+                    { id: 'opt_b', text: 'Streaming menggunakan TCP; Pengiriman PDF menggunakan UDP' },
+                    { id: 'opt_c', text: 'Keduanya wajib menggunakan protokol UDP' },
+                    { id: 'opt_d', text: 'Keduanya wajib menggunakan protokol HTTP' }
+                ],
+                explanation: 'UDP mementingkan kecepatan tanpa overhead re-transmisi (cocok untuk live streaming). TCP mementingkan keandalan dan verifikasi kirim (cocok untuk transfer file).'
+            },
+            {
+                id: 'q7',
+                category: 'Analisis Keamanan Jaringan',
+                cognitive: 'C5 - Evaluasi',
+                prompt: 'Sistem server sekolah mendadak lambat luar biasa karena dibanjiri jutaan lalu lintas data palsu yang berasal dari ribuan komputer asing di luar negeri dalam waktu bersamaan, menyebabkan siswa gagal mengakses aplikasi ujian. Jenis serangan keamanan apakah ini dan apa langkah pencegahan awalnya?',
+                options: [
+                    { id: 'opt_a', text: 'Serangan DDoS (Distributed Denial of Service); diatasi dengan aturan Firewall & Rate Limiting', correct: true },
+                    { id: 'opt_b', text: 'Serangan Phishing; diatasi dengan mengganti monitor PC' },
+                    { id: 'opt_c', text: 'Kesalahan kabel UTP longgar; diatasi dengan me-restart Switch' },
+                    { id: 'opt_d', text: 'Serangan Hardware; diatasi dengan mematikan pendingin ruangan' }
+                ],
+                explanation: 'DDoS melumpuhkan server dengan membanjiri request dari berbagai sumber botnet. Firewall dan penyaringan IP menjadi benteng pertahanan utama.'
+            },
+            {
+                id: 'q8',
+                category: 'DNS Protocol',
+                cognitive: 'C4 - Analisis',
+                prompt: 'Seorang siswa mengetikkan "www.alhilaal-tehoru.sch.id" di web browser. Ponsel siswa tidak menghafal nama domain tersebut, melainkan harus menghubungi server khusus untuk mendapatkan IP Address target "103.120.45.2". Protokol yang melakukan tugas penerjemahan nama ke IP tersebut adalah:',
+                options: [
+                    { id: 'opt_a', text: 'DHCP (Dynamic Host Configuration Protocol)' },
+                    { id: 'opt_b', text: 'DNS (Domain Name System)', correct: true },
+                    { id: 'opt_c', text: 'FTP (File Transfer Protocol)' },
+                    { id: 'opt_d', text: 'SMTP (Simple Mail Transfer Protocol)' }
+                ],
+                explanation: 'DNS berfungsi seperti buku telepon internet yang menerjemahkan nama domain yang mudah diingat manusia menjadi IP Address komputer.'
+            },
+            {
+                id: 'q9',
+                category: 'Troubleshooting Wi-Fi AP',
+                cognitive: 'C6 - Merancang Solusi',
+                prompt: 'Sinyal Wi-Fi di ruang guru sering terganggu (interferensi) dan koneksi melambat saat beberapa Access Point tetangga menyalakan sinyal pada frekuensi 2.4 GHz yang sama (Channel 6). Solusi teknis terbaik tanpa mengganti perangkat adalah:',
+                options: [
+                    { id: 'opt_a', text: 'Mengubah Channel frekuensi Wi-Fi ke channel non-overlapping (misal Channel 1 atau 11)', correct: true },
+                    { id: 'opt_b', text: 'Memotong antena Access Point menjadi setengahnya' },
+                    { id: 'opt_c', text: 'Mengganti kata sandi Wi-Fi setiap 5 menit sekali' },
+                    { id: 'opt_d', text: 'Mematikan fitur IP Address pada router' }
+                ],
+                explanation: 'Frekuensi 2.4 GHz memiliki channel terbatas. Mengubah ke channel non-overlapping (1, 6, 11) meredam masalah interferensi gelombang radio.'
+            },
+            {
+                id: 'q10',
+                category: 'Pemilihan Media Transmisi',
+                cognitive: 'C5 - Evaluasi',
+                prompt: 'Sekolah ingin menghubungkan jaringan komputer antara Kampus Utama SMAS Al-Hilaal Tehoru dengan laboratorium lapangan yang berjarak 3 Kilometer di area terbuka dengan potensi petir tinggi. Media transmisi fisik apakah yang paling tepat digunakan?',
+                options: [
+                    { id: 'opt_a', text: 'Kabel UTP Cat5e tanpa pelindung' },
+                    { id: 'opt_b', text: 'Kabel Fiber Optic (Serat Optik)', correct: true },
+                    { id: 'opt_c', text: 'Kabel Tembaga Coaxial bekas' },
+                    { id: 'opt_d', text: 'Kabel Listrik PLN' }
+                ],
+                explanation: 'Kabel Fiber Optic memancarkan data menggunakan gelombang cahaya (bukan sinyal listrik), sehingga kebal interferensi elektromagnetik/petir dan mendukung jarak jauh (> 2 KM).'
+            }
+        ];
+
+        /* ==========================================================================
+           2. APP STATE VARIABLES
+           ========================================================================== */
+        let currentMateriIndex = 0;
+        let learnedMateriSet = new Set();
+
+        let activeStudent = null; // { name, classCode, studentId }
+        let randomizedQuestions = []; // Active shuffled question array for exam
+        let currentQuestionIndex = 0;
+        let studentAnswers = {}; // { questionId: selectedOptionId }
+        let flaggedQuestions = new Set();
+        let examFinished = false;
+
+        /* ==========================================================================
+           3. UTILITY FUNCTIONS (Fisher-Yates Shuffle)
+           ========================================================================== */
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        /* ==========================================================================
+           4. ROUTING & NAVIGATION ENGINE
+           ========================================================================== */
+        function navigateTo(pageId) {
+            const pages = [
+                'page-home', 'page-tujuan', 'page-pemantik', 'page-materi', 
+                'page-kuis-login', 'page-kuis-exam', 'page-kuis-result', 
+                'page-sertifikat', 'page-rekap-guru'
+            ];
+
+            pages.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Route specifics triggers
+            if (pageId === 'tujuan') renderTujuanList();
+            if (pageId === 'materi') renderMateriView();
+            if (pageId === 'rekap-guru') renderTeacherRekap();
+            if (pageId === 'sertifikat' && !examFinished) {
+                alert('Silakan selesaikan kuis evaluasi terlebih dahulu untuk membuat sertifikat!');
+                navigateTo('kuis-login');
+            }
+        }
+
+        // Toggle Mobile Menu
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        /* ==========================================================================
+           5. TUJUAN & PEMANTIK CONTROLLERS
+           ========================================================================== */
+        function renderTujuanList() {
+            const container = document.getElementById('tujuanList');
+            container.innerHTML = TUJUAN_DATA.map((t, idx) => `
+                <div class="bg-navy-950 p-3.5 rounded-xl border border-slate-800 flex items-start space-x-3">
+                    <span class="p-1 bg-electric-500/10 text-electric-500 rounded font-mono text-xs font-bold">${idx + 1}</span>
+                    <p class="text-xs text-slate-300 leading-relaxed">${t.substring(3)}</p>
+                </div>
+            `).join('');
+        }
+
+        function togglePemantikExplain(num) {
+            const exp = document.getElementById(`pemantikExp${num}`);
+            if (exp) exp.classList.toggle('hidden');
+        }
+
+        /* ==========================================================================
+           6. MATERI LEARNING ENGINE
+           ========================================================================== */
+        function renderMateriView() {
+            // Render Grid Tabs
+            const tabGrid = document.getElementById('materiTabGrid');
+            tabGrid.innerHTML = MATERI_DATA.map((m, idx) => {
+                const isActive = idx === currentMateriIndex;
+                const isLearned = learnedMateriSet.has(idx);
+                return `
+                    <button onclick="selectMateriStep(${idx})" class="p-2.5 rounded-xl border text-left transition flex flex-col justify-between h-20 ${
+                        isActive 
+                            ? 'bg-electric-500/20 border-electric-500 text-electric-400' 
+                            : 'bg-navy-950 border-slate-800 text-slate-400 hover:border-slate-700'
+                    }">
+                        <div class="flex justify-between items-center w-full">
+                            <span class="text-[10px] font-mono font-bold">${String.fromCharCode(65 + idx)}</span>
+                            ${isLearned ? '<i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>' : ''}
+                        </div>
+                        <span class="text-[11px] font-bold line-clamp-2 leading-tight">${m.title.split('. ')[1]}</span>
+                    </button>
+                `;
+            }).join('');
+
+            // Render Active Content Card
+            const currentM = MATERI_DATA[currentMateriIndex];
+            document.getElementById('materiContentCard').innerHTML = currentM.content;
+
+            // Mark learned
+            learnedMateriSet.add(currentMateriIndex);
+            updateMateriProgressBar();
+
+            // Update prev/next button states
+            document.getElementById('btnPrevMateri').disabled = (currentMateriIndex === 0);
+            
+            lucide.createIcons();
+        }
+
+        function selectMateriStep(index) {
+            currentMateriIndex = index;
+            renderMateriView();
+        }
+
+        function changeMateriStep(direction) {
+            const newIdx = currentMateriIndex + direction;
+            if (newIdx >= 0 && newIdx < MATERI_DATA.length) {
+                currentMateriIndex = newIdx;
+                renderMateriView();
+            } else if (newIdx >= MATERI_DATA.length) {
+                // Done all
+                if (confirm('Selamat! Seluruh submateri telah dipelajari. Apakah kamu ingin melanjutkan ke Kuis Evaluasi?')) {
+                    navigateTo('kuis-login');
+                }
+            }
+        }
+
+        function updateMateriProgressBar() {
+            const percent = Math.round((learnedMateriSet.size / MATERI_DATA.length) * 100);
+            document.getElementById('materiProgressPercent').innerText = `${percent}%`;
+            document.getElementById('materiProgressBar').style.width = `${percent}%`;
+        }
+
+        /* ==========================================================================
+           7. RANDOMIZED EXAM & QUIZ ENGINE
+           ========================================================================== */
+        function handleStudentLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('loginName').value.trim();
+            const classCode = document.getElementById('loginClass').value;
+            const code = document.getElementById('loginCode').value.trim();
+
+            if (!name || !classCode || !code) {
+                alert('Mohon lengkapi semua data identitas!');
+                return;
+            }
+
+            activeStudent = { name, classCode, studentId: code };
+
+            // Update Nav Badge
+            document.getElementById('badgeStudentName').innerText = `${name} (${classCode})`;
+            document.getElementById('userBadge').classList.remove('hidden');
+
+            // Initialize Randomized Exam Session via Fisher-Yates
+            startRandomizedQuizSession();
+        }
+
+        function startRandomizedQuizSession() {
+            // 1. Shuffle Questions Array
+            const shuffledQ = shuffleArray(MASTER_QUESTIONS);
+
+            // 2. Shuffle Options inside each question
+            randomizedQuestions = shuffledQ.map(q => {
+                return {
+                    ...q,
+                    options: shuffleArray(q.options)
+                };
+            });
+
+            // Reset Exam States
+            currentQuestionIndex = 0;
+            studentAnswers = {};
+            flaggedQuestions.clear();
+            examFinished = false;
+
+            // Render Exam Page
+            navigateTo('kuis-exam');
+            renderExamQuestion();
+        }
+
+        function renderExamQuestion() {
+            const q = randomizedQuestions[currentQuestionIndex];
+
+            // Student Meta Header
+            document.getElementById('examStudentMeta').innerText = `${activeStudent.name} | ${activeStudent.classCode}`;
+            document.getElementById('examProgressText').innerText = `Soal ${currentQuestionIndex + 1} dari ${randomizedQuestions.length}`;
+
+            // Render Number Nav Palette
+            const navContainer = document.getElementById('quizNumberNav');
+            navContainer.innerHTML = randomizedQuestions.map((item, idx) => {
+                const isAnswered = studentAnswers[item.id] !== undefined;
+                const isFlagged = flaggedQuestions.has(item.id);
+                const isCurrent = idx === currentQuestionIndex;
+
+                let btnClass = "w-8 h-8 rounded-lg text-xs font-mono font-bold transition flex items-center justify-center ";
+                if (isCurrent) {
+                    btnClass += "bg-electric-500 text-navy-950 ring-2 ring-white ";
+                } else if (isFlagged) {
+                    btnClass += "bg-amber-500 text-navy-950 ";
+                } else if (isAnswered) {
+                    btnClass += "bg-emerald-500/20 border border-emerald-400 text-emerald-400 ";
+                } else {
+                    btnClass += "bg-navy-950 border border-slate-800 text-slate-400 hover:border-slate-700 ";
+                }
+
+                return `<button onclick="jumpToQuizQuestion(${idx})" class="${btnClass}">${idx + 1}</button>`;
+            }).join('');
+
+            // Cognitive & Prompt
+            document.getElementById('questionCognitiveBadge').innerText = `${q.cognitive} • ${q.category}`;
+            document.getElementById('questionIndicatorText').innerText = `ID Soal: ${q.id.toUpperCase()}`;
+            document.getElementById('questionText').innerText = q.prompt;
+
+            // Options list (A, B, C, D badges assigned dynamically to shuffled options)
+            const optionsContainer = document.getElementById('optionsContainer');
+            const letters = ['A', 'B', 'C', 'D'];
+            
+            optionsContainer.innerHTML = q.options.map((opt, oIdx) => {
+                const letter = letters[oIdx];
+                const isSelected = studentAnswers[q.id] === opt.id;
+
+                return `
+                    <div onclick="selectQuizOption('${q.id}', '${opt.id}')" class="p-4 rounded-xl border transition cursor-pointer flex items-center space-x-3 ${
+                        isSelected 
+                            ? 'bg-electric-500/20 border-electric-500 text-white shadow-lg shadow-electric-500/10' 
+                            : 'bg-navy-950 border-slate-800 text-slate-300 hover:border-slate-700'
+                    }">
+                        <div class="w-7 h-7 rounded-lg border font-bold flex items-center justify-center text-xs font-mono ${
+                            isSelected ? 'bg-electric-500 text-navy-950 border-electric-500' : 'bg-navy-900 border-slate-700 text-electric-400'
+                        }">
+                            ${letter}
+                        </div>
+                        <span class="text-xs sm:text-sm font-medium leading-relaxed">${opt.text}</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Update Navigation Button Visibility
+            document.getElementById('btnPrevQuestion').disabled = (currentQuestionIndex === 0);
+            
+            const isLast = (currentQuestionIndex === randomizedQuestions.length - 1);
+            if (isLast) {
+                document.getElementById('btnNextQuestion').classList.add('hidden');
+                document.getElementById('btnFinishExam').classList.remove('hidden');
+                document.getElementById('btnFinishExam').classList.add('flex');
+            } else {
+                document.getElementById('btnNextQuestion').classList.remove('hidden');
+                document.getElementById('btnFinishExam').classList.add('hidden');
+                document.getElementById('btnFinishExam').classList.remove('flex');
+            }
+
+            // Flag state
+            const btnFlag = document.getElementById('btnFlagQuestion');
+            if (flaggedQuestions.has(q.id)) {
+                btnFlag.classList.add('bg-amber-500', 'text-navy-950');
+                btnFlag.classList.remove('bg-navy-800', 'text-amber-400');
+            } else {
+                btnFlag.classList.remove('bg-amber-500', 'text-navy-950');
+                btnFlag.classList.add('bg-navy-800', 'text-amber-400');
+            }
+
+            lucide.createIcons();
+        }
+
+        function selectQuizOption(questionId, optionId) {
+            studentAnswers[questionId] = optionId;
+            renderExamQuestion();
+        }
+
+        function toggleFlagCurrentQuestion() {
+            const q = randomizedQuestions[currentQuestionIndex];
+            if (flaggedQuestions.has(q.id)) {
+                flaggedQuestions.delete(q.id);
+            } else {
+                flaggedQuestions.add(q.id);
+            }
+            renderExamQuestion();
+        }
+
+        function jumpToQuizQuestion(index) {
+            currentQuestionIndex = index;
+            renderExamQuestion();
+        }
+
+        function navigateQuizQuestion(direction) {
+            const target = currentQuestionIndex + direction;
+            if (target >= 0 && target < randomizedQuestions.length) {
+                currentQuestionIndex = target;
+                renderExamQuestion();
+            }
+        }
+
+        function confirmFinishExam() {
+            const answeredCount = Object.keys(studentAnswers).length;
+            const total = randomizedQuestions.length;
+
+            if (answeredCount < total) {
+                if (!confirm(`Kamu baru menjawab ${answeredCount} dari ${total} soal. Yakin ingin mengakhiri kuis sekarang?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm('Apakah kamu yakin ingin menyelesaikan kuis dan mengirimkan jawaban?')) {
+                    return;
+                }
+            }
+
+            calculateAndDisplayResults();
+        }
+
+        /* ==========================================================================
+           8. AUTOMATIC GRADING & RESULT EVALUATION
+           ========================================================================== */
+        function calculateAndDisplayResults() {
+            examFinished = true;
+
+            let correctCount = 0;
+            const explanationsContainer = document.getElementById('explanationsContainer');
+            explanationsContainer.innerHTML = '';
+
+            randomizedQuestions.forEach((q, idx) => {
+                const selectedOptId = studentAnswers[q.id];
+                const correctOpt = q.options.find(o => o.correct === true);
+                const selectedOpt = q.options.find(o => o.id === selectedOptId);
+                const isCorrect = selectedOptId === correctOpt.id;
+
+                if (isCorrect) correctCount++;
+
+                // Build discussion item card
+                explanationsContainer.innerHTML += `
+                    <div class="bg-navy-900/90 p-5 rounded-2xl border ${isCorrect ? 'border-emerald-500/30' : 'border-rose-500/30'} space-y-3">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-white">Soal #${idx + 1} (${q.cognitive})</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isCorrect ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">
+                                ${isCorrect ? 'BENAR (+10)' : 'SALAH (0)'}
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-200">${q.prompt}</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                            <div class="bg-navy-950 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-[10px] text-slate-400 block">Jawaban Kamu:</span>
+                                <span class="font-bold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}">
+                                    ${selectedOpt ? selectedOpt.text : '(Tidak Dijawab)'}
+                                </span>
+                            </div>
+                            <div class="bg-navy-950 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-[10px] text-slate-400 block">Kunci Jawaban Benar:</span>
+                                <span class="font-bold text-emerald-400">${correctOpt.text}</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-electric-500/10 border border-electric-500/30 rounded-xl text-xs text-slate-300">
+                            <strong class="text-electric-400 block mb-1">Pembahasan & Analisis:</strong>
+                            ${q.explanation}
+                        </div>
+                    </div>
+                `;
+            });
+
+            const wrongCount = randomizedQuestions.length - correctCount;
+            const finalScore = Math.round((correctCount / randomizedQuestions.length) * 100);
+
+            // Determine Predicate
+            let predicate = '';
+            if (finalScore >= 90) predicate = 'Sangat Baik (A)';
+            else if (finalScore >= 80) predicate = 'Baik (B)';
+            else if (finalScore >= 70) predicate = 'Cukup (C)';
+            else predicate = 'Perlu Belajar Kembali (D)';
+
+            // Update UI Displays
+            document.getElementById('resultStudentName').innerText = activeStudent.name;
+            document.getElementById('resultStudentMeta').innerText = `Kelas: ${activeStudent.classCode} | NIS: ${activeStudent.studentId}`;
+            document.getElementById('resultFinalScore').innerText = finalScore;
+            document.getElementById('resultCorrectCount').innerText = `${correctCount} / 10`;
+            document.getElementById('resultWrongCount').innerText = `${wrongCount} / 10`;
+            document.getElementById('resultPredicate').innerText = predicate;
+
+            // Prepare Certificate Data
+            updateCertificateDOM(correctCount, wrongCount, finalScore, predicate);
+
+            // Save Result to LocalStorage Rekap
+            saveQuizResultToLocalStorage({
+                date: new Date().toLocaleString('id-ID'),
+                name: activeStudent.name,
+                classCode: activeStudent.classCode,
+                studentId: activeStudent.studentId,
+                correct: correctCount,
+                wrong: wrongCount,
+                score: finalScore,
+                predicate: predicate
+            });
+
+            // Trigger Confetti Celebrations if high score
+            if (finalScore >= 80 && typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            navigateTo('kuis-result');
+        }
+
+        /* ==========================================================================
+           9. CERTIFICATE DOM GENERATION & PDF EXPORT
+           ========================================================================== */
+        function updateCertificateDOM(correct, wrong, score, predicate) {
+            document.getElementById('certNumber').innerText = `No. Cert: NETLAB/2026/${Math.floor(1000 + Math.random() * 9000)}`;
+            document.getElementById('certStudentName').innerText = activeStudent.name.toUpperCase();
+            document.getElementById('certStudentClass').innerText = `Kelas: ${activeStudent.classCode} | Kode Peserta: ${activeStudent.studentId}`;
+            document.getElementById('certCorrect').innerText = `${correct} / 10`;
+            document.getElementById('certWrong').innerText = `${wrong} / 10`;
+            document.getElementById('certScore').innerText = score;
+            document.getElementById('certPredicate').innerText = predicate;
+            document.getElementById('certStudentSignName').innerText = activeStudent.name;
+            document.getElementById('certDate').innerText = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function downloadCertificatePDF() {
+            const element = document.getElementById('printableCertificate');
+            const opt = {
+                margin:       0,
+                filename:     `Sertifikat_Informatika_${activeStudent.name.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#03050d' },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+            };
+
+            if (typeof html2pdf !== 'undefined') {
+                html2pdf().set(opt).from(element).save();
+            } else {
+                window.print();
+            }
+        }
+
+        /* ==========================================================================
+           10. TEACHER REKAP & LOCALSTORAGE PERSISTENCE
+           ========================================================================== */
+        function saveQuizResultToLocalStorage(dataRecord) {
+            let rekap = JSON.parse(localStorage.getItem('netlab_teacher_rekap') || '[]');
+            rekap.unshift(dataRecord);
+            localStorage.setItem('netlab_teacher_rekap', JSON.stringify(rekap));
+        }
+
+        function renderTeacherRekap() {
+            const rekap = JSON.parse(localStorage.getItem('netlab_teacher_rekap') || '[]');
+            const tbody = document.getElementById('rekapTableBody');
+
+            if (rekap.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="p-6 text-center text-slate-500 italic">Belum ada data evaluasi siswa yang tersimpan pada sesi ini.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = rekap.map((r, idx) => `
+                <tr class="hover:bg-navy-950/50 transition">
+                    <td class="p-3 font-mono">${idx + 1}</td>
+                    <td class="p-3 text-[11px] text-slate-400">${r.date}</td>
+                    <td class="p-3 font-bold text-white">${r.name}</td>
+                    <td class="p-3 font-mono">${r.classCode}</td>
+                    <td class="p-3 font-mono text-slate-400">${r.studentId}</td>
+                    <td class="p-3 font-bold text-emerald-400">${r.correct}</td>
+                    <td class="p-3 font-bold text-rose-400">${r.wrong}</td>
+                    <td class="p-3 font-bold text-electric-400 text-sm">${r.score}</td>
+                    <td class="p-3 text-amber-400 font-semibold">${r.predicate}</td>
+                </tr>
+            `).join('');
+        }
+
+        function exportTeacherRekapCSV() {
+            const rekap = JSON.parse(localStorage.getItem('netlab_teacher_rekap') || '[]');
+            if (rekap.length === 0) {
+                alert('Tidak ada data rekap untuk diekspor!');
+                return;
+            }
+
+            let csv = 'No,Tanggal,Nama Siswa,Kelas,Kode/NIS,Jawaban Benar,Jawaban Salah,Nilai Akhir,Predikat\n';
+            rekap.forEach((r, idx) => {
+                csv += `${idx + 1},"${r.date}","${r.name}","${r.classCode}","${r.studentId}",${r.correct},${r.wrong},${r.score},"${r.predicate}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Rekap_Nilai_Informatika_Tehoru_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+        }
+
+        function clearTeacherRekapData() {
+            if (confirm('Yakin ingin menghapus seluruh data rekap evaluasi siswa pada perangkat ini?')) {
+                localStorage.removeItem('netlab_teacher_rekap');
+                renderTeacherRekap();
+            }
+        }
+
+        /* ==========================================================================
+           11. INITIALIZATION ON DOM LOAD
+           ========================================================================== */
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderTujuanList();
+        });
+    </script>
+</body>
+</html>
